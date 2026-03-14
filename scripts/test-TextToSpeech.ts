@@ -4,7 +4,7 @@
 
 import 'dotenv/config'
 import { writeFileSync } from 'fs'
-import { generateVoice, SAM_VOICE_ID, ALEX_VOICE_ID } from '../lib/elevenlabs'
+import { generateVoice, SAM_VOICE_ID, ALEX_VOICE_ID } from '../lib/elevenlabs.ts'
 
 const TEST_TEXT = 'Hello, this is a test.' // 22 chars — minimal budget hit
 
