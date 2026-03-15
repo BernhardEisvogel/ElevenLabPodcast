@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { siteConfig } from "@/lib/site";
+
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -14,8 +19,11 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Drop",
-  description: "Turn any topic or URL into a short two-host podcast episode.",
+  title: {
+    default: `${siteConfig.name} | Grounded voice products`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
 };
 
 export default function RootLayout({
@@ -25,7 +33,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${mono.variable} antialiased`}>{children}</body>
+      <body className={`${display.variable} ${mono.variable} antialiased`}>
+        <div className="min-h-screen">
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </div>
+      </body>
     </html>
   );
 }

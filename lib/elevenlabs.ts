@@ -13,15 +13,56 @@ function getElevenLabsApiKey(): string {
   return apiKey;
 }
 
+function serializeErrorValue(value: unknown): string {
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => serializeErrorValue(entry))
+      .filter(Boolean)
+      .join("; ");
+  }
+
+  if (value && typeof value === "object") {
+    const payload = value as Record<string, unknown>;
+    const preferred = [
+      payload.message,
+      payload.detail,
+      payload.error,
+      payload.reason,
+      payload.code,
+    ]
+      .map((entry) => serializeErrorValue(entry))
+      .filter(Boolean);
+
+    if (preferred.length) {
+      return preferred.join(" | ");
+    }
+
+    try {
+      return JSON.stringify(payload);
+    } catch {
+      return "";
+    }
+  }
+
+  return "";
+}
+
 async function readErrorMessage(response: Response): Promise<string> {
   const contentType = response.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
-    const payload = (await response.json().catch(() => null)) as
-      | { detail?: string; message?: string }
-      | null;
+    const payload = (await response.json().catch(() => null)) as unknown;
+    const parsed = serializeErrorValue(payload);
 
-    return payload?.detail || payload?.message || response.statusText;
+    return parsed || response.statusText;
   }
 
   const text = await response.text().catch(() => "");
@@ -86,7 +127,9 @@ export async function generateDialogueAudio({
   );
 
   if (!response.ok) {
-    throw new Error(`ElevenLabs audio generation failed: ${await readErrorMessage(response)}`);
+    throw new Error(
+      `ElevenLabs audio generation failed (${response.status}): ${await readErrorMessage(response)}`,
+    );
   }
 
   const mimeType = response.headers.get("content-type") || "audio/mpeg";

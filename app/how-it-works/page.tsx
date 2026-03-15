@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+import { siteConfig } from "@/lib/site";
+
 export const metadata: Metadata = {
-  title: "How It Works | Drop",
+  title: "How It Works",
   description:
-    "A slide-like overview of how Drop uses Needle, Featherless AI, and ElevenLabs to turn a URL into a grounded podcast.",
+    "See how Sourcewave uses Needle, Featherless AI, and ElevenLabs to turn a URL into grounded audio.",
 };
 
 const sectionLinks = [
@@ -204,22 +206,21 @@ export default function HowItWorksPage() {
         <section className="how-slide how-slide-hero rounded-[2.4rem] px-6 py-8 sm:px-8 lg:min-h-[82vh] lg:px-12 lg:py-12">
           <div className="relative grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
             <div className="max-w-3xl">
-              <p className="label-mono text-[11px] text-[var(--muted)]">How Drop works</p>
+              <p className="label-mono text-[11px] text-[var(--muted)]">How Sourcewave works</p>
               <h1 className="mt-4 max-w-4xl text-4xl leading-none font-semibold tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-7xl">
-                A landing page that reads like slides, but explains a grounded AI pipeline.
+                How Sourcewave turns a URL into grounded audio.
               </h1>
               <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--muted)] sm:text-lg">
-                Drop turns a URL into a two-host podcast by splitting one risky job into three
-                narrower ones: retrieval with Needle, script generation with Featherless AI, and
-                voice rendering with ElevenLabs.
+                Sourcewave retrieves the source with Needle, writes the script with Featherless AI,
+                and renders the final dialogue with ElevenLabs.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
-                  href="/"
+                  href={siteConfig.studioHref}
                   className="inline-flex items-center rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-deep)]"
                 >
-                  Back to studio
+                  Open studio
                 </Link>
                 <div className="inline-flex items-center rounded-full border border-slate-900/10 bg-white/70 px-4 py-3 text-sm text-slate-900">
                   Built for grounded URL-to-audio generation
@@ -419,8 +420,7 @@ export default function HowItWorksPage() {
                 From source to spoken episode in six steps.
               </h2>
               <p className="mt-4 text-base leading-7 text-[var(--muted)]">
-                The layout below is intentionally slide-like: one big process story, not a dense
-                block of documentation.
+                This is the full path from URL input to final audio output.
               </p>
             </div>
 
@@ -693,7 +693,7 @@ export default function HowItWorksPage() {
 
         <section className="how-slide how-slide-dark rounded-[2.2rem] px-6 py-8 sm:px-8 lg:px-10 lg:py-12">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="label-mono text-[11px] text-white/50">Final slide</p>
+            <p className="label-mono text-[11px] text-white/50">Final step</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
               Retrieval first. Script second. Audio last.
             </h2>
@@ -703,7 +703,7 @@ export default function HowItWorksPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
-                href="/"
+                href={siteConfig.studioHref}
                 className="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-white/90"
               >
                 Open the studio
