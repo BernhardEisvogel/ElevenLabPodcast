@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare:extension": "node scripts/package-extension.mjs",
+    "predev": "npm run prepare:extension",
+    "prebuild": "npm run prepare:extension",
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",

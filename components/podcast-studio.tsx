@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useEffect, useRef, useState, useTransition } from "react";
 
 import { siteConfig } from "@/lib/site";
@@ -37,7 +38,23 @@ function getLanguageLabel(language: EpisodeLanguage): string {
   return language === "de" ? "German" : "English";
 }
 
+function getSourceLabel(input: string): string {
+  const trimmedInput = input.trim();
+
+  if (!trimmedInput) {
+    return "your page";
+  }
+
+  try {
+    const url = new URL(trimmedInput);
+    return url.hostname;
+  } catch {
+    return trimmedInput;
+  }
+}
+
 export function PodcastStudio() {
+  const searchParams = useSearchParams();
   const [input, setInput] = useState("");
   const [userIntent, setUserIntent] = useState("");
   const [followUpQuestion, setFollowUpQuestion] = useState("");
@@ -55,6 +72,12 @@ export function PodcastStudio() {
   const deferredInput = useDeferredValue(input);
   const deferredIntent = useDeferredValue(userIntent);
   const lastAudioUrl = useRef<string | null>(null);
+  const lastPrefillKey = useRef("");
+
+  const sourceParam = searchParams.get("source")?.trim() ?? "";
+  const intentParam = searchParams.get("intent")?.trim() ?? "";
+  const originParam = searchParams.get("origin")?.trim() ?? "";
+  const isExtensionEntry = originParam === "extension";
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +112,27 @@ export function PodcastStudio() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const prefillKey = `${sourceParam}|${intentParam}|${originParam}`;
+
+    if (prefillKey === lastPrefillKey.current) {
+      return;
+    }
+
+    lastPrefillKey.current = prefillKey;
+
+    if (!sourceParam && !intentParam && !originParam) {
+      return;
+    }
+
+    setInput(sourceParam);
+    setUserIntent(intentParam);
+    setFollowUpQuestion("");
+    setResult(null);
+    setAudio(null);
+    setError(null);
+  }, [intentParam, originParam, sourceParam]);
 
   useEffect(() => {
     if (!audio) {
@@ -127,7 +171,9 @@ export function PodcastStudio() {
     reuseRetrievedContext?: boolean;
   } = {}) {
     const reuseExistingResult =
-      reuseRetrievedContext && Boolean(result?.retrievalContext) && Boolean(result?.relevantSources.length);
+      reuseRetrievedContext &&
+      Boolean(result?.retrievalContext) &&
+      Boolean(result?.relevantSources.length);
     const resolvedIntent = nextIntent ?? (userIntent.trim() || null);
 
     setIsSubmitting(true);
@@ -228,35 +274,48 @@ export function PodcastStudio() {
 
   return (
     <main className="px-4 py-8 text-slate-900 sm:px-6 lg:px-10">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-        <section className="glass-card-strong rounded-[2rem] px-6 py-7 sm:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:gap-8">
+        <section className="glass-card-strong rounded-[2.2rem] px-6 py-7 sm:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-4">
               <p className="label-mono text-[11px] text-[var(--muted)]">{siteConfig.name} Studio</p>
               <h1 className="text-4xl leading-none font-semibold tracking-[-0.04em] text-slate-950 sm:text-5xl">
-                Ask a site for exactly what you need, then turn the answer into audio.
+                Turn a URL or topic into a grounded audio briefing.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-[var(--muted)] sm:text-lg">
-                Add intent, switch between English and German, inspect citations, and ask
-                follow-up questions without crawling the site again.
+                Start with the page, add intent if you need it, inspect the answer, then render the
+                audio once the grounded output looks right.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <div className="rounded-full border border-slate-900/10 bg-white/75 px-4 py-2 text-sm text-slate-900">
+              <div className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm text-slate-900">
                 {inputMode}
               </div>
-              <div className="rounded-full border border-slate-900/10 bg-white/75 px-4 py-2 text-sm text-slate-900">
+              <div className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm text-slate-900">
                 {getLanguageLabel(language)}
               </div>
               <Link
                 href="/how-it-works"
-                className="inline-flex items-center rounded-full border border-slate-900/10 bg-white/75 px-4 py-2 text-sm text-[var(--muted)] transition hover:border-[var(--accent)] hover:text-slate-900"
+                className="inline-flex items-center rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm text-[var(--muted)] transition hover:border-[var(--accent)] hover:text-slate-900"
               >
                 How it works
               </Link>
             </div>
           </div>
+
+          {isExtensionEntry ? (
+            <div
+              className="mt-6 rounded-[1.6rem] border border-[rgba(255,122,48,0.24)] bg-[rgba(255,122,48,0.08)] px-4 py-4 text-sm leading-6 text-slate-900"
+              data-testid="extension-entry-banner"
+            >
+              <p className="label-mono text-[10px] text-[var(--accent-deep)]">Chrome extension</p>
+              <p className="mt-2">
+                You opened the studio from the Sourcewave extension. The current source is{" "}
+                <span className="font-medium">{getSourceLabel(sourceParam || input)}</span>.
+              </p>
+            </div>
+          ) : null}
         </section>
 
         <section className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
@@ -268,7 +327,7 @@ export function PodcastStudio() {
                   Source and intent
                 </h2>
               </div>
-              <div className="rounded-full border border-slate-900/10 bg-white/70 px-3 py-2 text-right">
+              <div className="rounded-full border border-slate-900/10 bg-white/80 px-3 py-2 text-right">
                 <p className="label-mono text-[10px] text-[var(--muted)]">Mode</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">{inputMode}</p>
               </div>
@@ -282,7 +341,7 @@ export function PodcastStudio() {
                   onChange={(event) => setInput(event.target.value)}
                   data-testid="source-input"
                   placeholder="Paste a public website URL, or type a topic if you want a general audio briefing."
-                  className="mt-2 min-h-40 w-full rounded-[1.6rem] border border-slate-900/10 bg-white px-5 py-4 text-base leading-7 text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
+                  className="mt-2 min-h-36 w-full rounded-[1.6rem] border border-slate-900/10 bg-white px-5 py-4 text-base leading-7 text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
                 />
               </label>
 
@@ -293,7 +352,7 @@ export function PodcastStudio() {
                   onChange={(event) => setUserIntent(event.target.value)}
                   data-testid="intent-input"
                   placeholder={intentPlaceholder}
-                  className="mt-2 min-h-32 w-full rounded-[1.6rem] border border-slate-900/10 bg-white px-5 py-4 text-base leading-7 text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
+                  className="mt-2 min-h-28 w-full rounded-[1.6rem] border border-slate-900/10 bg-white px-5 py-4 text-base leading-7 text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
                 />
               </label>
 
@@ -304,100 +363,116 @@ export function PodcastStudio() {
                 </div>
               ) : null}
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
                 <label className="block">
                   <span className="label-mono text-[11px] text-[var(--muted)]">Language</span>
                   <select
                     value={language}
                     onChange={(event) => setLanguage(event.target.value === "de" ? "de" : "en")}
                     data-testid="language-select"
-                    className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
+                    className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)] md:min-w-56"
                   >
                     <option value="en">English</option>
                     <option value="de">German</option>
                   </select>
                 </label>
 
-                <label className="block">
-                  <span className="label-mono text-[11px] text-[var(--muted)]">Host A voice</span>
-                  <select
-                    value={voiceIdHostA}
-                    onChange={(event) => setVoiceIdHostA(event.target.value)}
-                    data-testid="voice-select-a"
-                    className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
-                  >
-                    <option value="">Use `.env.local` default</option>
-                    {voices.map((voice) => (
-                      <option key={voice.id} value={voice.id}>
-                        {voice.name}
-                        {voice.category ? ` - ${voice.category}` : ""}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="label-mono text-[11px] text-[var(--muted)]">Host B voice</span>
-                  <select
-                    value={voiceIdHostB}
-                    onChange={(event) => setVoiceIdHostB(event.target.value)}
-                    data-testid="voice-select-b"
-                    className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
-                  >
-                    <option value="">Use `.env.local` default</option>
-                    {voices.map((voice) => (
-                      <option key={voice.id} value={voice.id}>
-                        {voice.name}
-                        {voice.category ? ` - ${voice.category}` : ""}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <div className="rounded-[1.4rem] border border-slate-900/10 bg-[rgba(17,32,48,0.03)] px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+                  Use advanced voice settings only when you want to override your default hosts.
+                </div>
               </div>
 
-              <div
-                className="rounded-[1.5rem] border border-slate-900/8 bg-white px-4 py-4 text-sm leading-6 text-[var(--muted)]"
-                data-testid="voice-loading"
-              >
-                <p className="label-mono text-[10px]">Voices</p>
-                <p className="mt-2">
-                  {voicesError
-                    ? voicesError
-                    : voices.length
-                      ? "Voice options loaded from ElevenLabs. Pick two distinct voices or keep the defaults from `.env.local`."
-                      : "No live voices available yet. Add your ElevenLabs API key and reload the page."}
-                </p>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                {[selectedVoiceA, selectedVoiceB].map((voice, index) => (
-                  <div
-                    key={index === 0 ? "host-a-preview" : "host-b-preview"}
-                    className="rounded-[1.5rem] border border-slate-900/10 bg-white p-4"
-                  >
-                    <p className="label-mono text-[10px] text-[var(--muted)]">
-                      {index === 0 ? "Host A preview" : "Host B preview"}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-slate-900">
-                      {voice?.name ?? "No voice selected"}
-                    </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">
-                      {voice?.category ?? "Preview appears when available"}
-                    </p>
-                    {voice?.previewUrl ? (
-                      <audio
-                        className="mt-3 w-full"
-                        controls
-                        preload="none"
-                        src={voice.previewUrl}
-                        data-testid={index === 0 ? "preview-audio-a" : "preview-audio-b"}
-                      />
-                    ) : (
-                      <p className="mt-3 text-sm text-[var(--muted)]">No preview clip available.</p>
-                    )}
+              <section className="rounded-[1.7rem] border border-slate-900/10 bg-[rgba(255,255,255,0.6)] p-4 sm:p-5">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="label-mono text-[11px] text-[var(--muted)]">Advanced</p>
+                    <h3 className="mt-1 text-lg font-semibold text-slate-950">Voice settings</h3>
                   </div>
-                ))}
-              </div>
+                  <p className="text-sm text-[var(--muted)]">Optional host override for this run</p>
+                </div>
+
+                <div className="mt-5 grid gap-4 md:grid-cols-2">
+                  <label className="block">
+                    <span className="label-mono text-[11px] text-[var(--muted)]">Host A voice</span>
+                    <select
+                      value={voiceIdHostA}
+                      onChange={(event) => setVoiceIdHostA(event.target.value)}
+                      data-testid="voice-select-a"
+                      className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
+                    >
+                      <option value="">Use `.env.local` default</option>
+                      {voices.map((voice) => (
+                        <option key={voice.id} value={voice.id}>
+                          {voice.name}
+                          {voice.category ? ` - ${voice.category}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="label-mono text-[11px] text-[var(--muted)]">Host B voice</span>
+                    <select
+                      value={voiceIdHostB}
+                      onChange={(event) => setVoiceIdHostB(event.target.value)}
+                      data-testid="voice-select-b"
+                      className="mt-2 h-[52px] w-full rounded-2xl border border-slate-900/10 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-4 focus:ring-[rgba(255,122,48,0.12)]"
+                    >
+                      <option value="">Use `.env.local` default</option>
+                      {voices.map((voice) => (
+                        <option key={voice.id} value={voice.id}>
+                          {voice.name}
+                          {voice.category ? ` - ${voice.category}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div
+                  className="mt-4 rounded-[1.5rem] border border-slate-900/8 bg-white px-4 py-4 text-sm leading-6 text-[var(--muted)]"
+                  data-testid="voice-loading"
+                >
+                  <p className="label-mono text-[10px]">Voices</p>
+                  <p className="mt-2">
+                    {voicesError
+                      ? voicesError
+                      : voices.length
+                        ? "Voice options loaded from ElevenLabs. Pick two distinct voices or keep the defaults from `.env.local`."
+                        : "No live voices available yet. Add your ElevenLabs API key and reload the page."}
+                  </p>
+                </div>
+
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {[selectedVoiceA, selectedVoiceB].map((voice, index) => (
+                    <div
+                      key={index === 0 ? "host-a-preview" : "host-b-preview"}
+                      className="rounded-[1.5rem] border border-slate-900/10 bg-white p-4"
+                    >
+                      <p className="label-mono text-[10px] text-[var(--muted)]">
+                        {index === 0 ? "Host A preview" : "Host B preview"}
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-slate-900">
+                        {voice?.name ?? "No voice selected"}
+                      </p>
+                      <p className="mt-1 text-sm text-[var(--muted)]">
+                        {voice?.category ?? "Preview appears when available"}
+                      </p>
+                      {voice?.previewUrl ? (
+                        <audio
+                          className="mt-3 w-full"
+                          controls
+                          preload="none"
+                          src={voice.previewUrl}
+                          data-testid={index === 0 ? "preview-audio-a" : "preview-audio-b"}
+                        />
+                      ) : (
+                        <p className="mt-3 text-sm text-[var(--muted)]">No preview clip available.</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
 
               {error ? (
                 <div className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700">
@@ -531,7 +606,16 @@ export function PodcastStudio() {
             ) : null}
 
             <article className="glass-card rounded-[2rem] p-6 sm:p-7">
-              <div className="grid gap-4 xl:grid-cols-3">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="label-mono text-[11px] text-[var(--muted)]">Evidence</p>
+                  <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
+                    Checklist, citations, and relevant sources
+                  </h2>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 xl:grid-cols-3">
                 <div className="rounded-[1.6rem] border border-slate-900/10 bg-white p-5">
                   <p className="label-mono text-[10px] text-[var(--muted)]">Checklist</p>
                   <div className="mt-3" data-testid="checklist">
@@ -614,29 +698,6 @@ export function PodcastStudio() {
             </article>
 
             <article className="glass-card rounded-[2rem] p-6 sm:p-7">
-              <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-                <div className="rounded-[1.6rem] border border-slate-900/10 bg-white p-5">
-                  <p className="label-mono text-[10px] text-[var(--muted)]">Source input</p>
-                  <p className="mt-2 break-words text-sm leading-7 text-slate-900">
-                    {result?.source || "Your original URL or topic will show here."}
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-3 text-sm text-[var(--muted)]">
-                    <span>{result?.sourceType === "url" ? "Needle retrieval" : "Direct topic"}</span>
-                    <span>{result?.contextLength ?? 0} chars</span>
-                  </div>
-                </div>
-
-                <div className="rounded-[1.6rem] border border-slate-900/10 bg-white p-5">
-                  <p className="label-mono text-[10px] text-[var(--muted)]">Context preview</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[var(--muted)]">
-                    {result?.contextPreview ??
-                      "Needle retrieval context will appear here so you can inspect what grounded the briefing."}
-                  </p>
-                </div>
-              </div>
-            </article>
-
-            <article className="glass-card rounded-[2rem] p-6 sm:p-7">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="label-mono text-[11px] text-[var(--muted)]">Transcript</p>
@@ -672,6 +733,38 @@ export function PodcastStudio() {
                     The final transcript will land here after generation.
                   </p>
                 )}
+              </div>
+            </article>
+
+            <article className="glass-card rounded-[2rem] p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="label-mono text-[11px] text-[var(--muted)]">Source context</p>
+                  <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
+                    Original input and retrieved preview
+                  </h2>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+                <div className="rounded-[1.6rem] border border-slate-900/10 bg-white p-5">
+                  <p className="label-mono text-[10px] text-[var(--muted)]">Source input</p>
+                  <p className="mt-2 break-words text-sm leading-7 text-slate-900">
+                    {result?.source || "Your original URL or topic will show here."}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-3 text-sm text-[var(--muted)]">
+                    <span>{result?.sourceType === "url" ? "Needle retrieval" : "Direct topic"}</span>
+                    <span>{result?.contextLength ?? 0} chars</span>
+                  </div>
+                </div>
+
+                <div className="rounded-[1.6rem] border border-slate-900/10 bg-white p-5">
+                  <p className="label-mono text-[10px] text-[var(--muted)]">Context preview</p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[var(--muted)]">
+                    {result?.contextPreview ??
+                      "Needle retrieval context will appear here so you can inspect what grounded the briefing."}
+                  </p>
+                </div>
               </div>
             </article>
           </section>

@@ -6,13 +6,17 @@ import { siteConfig } from "@/lib/site";
 export function SiteFooter() {
   return (
     <footer className="px-4 pb-8 pt-10 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         <div className="glass-card rounded-[2rem] p-6 sm:p-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="max-w-xl">
               <SiteLogo />
               <p className="mt-5 text-sm leading-7 text-[var(--muted)] sm:text-base">
                 {siteConfig.description}
+              </p>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-slate-900">
+                Capture a page, review the grounded answer, then render the final audio when it is
+                ready.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -22,10 +26,10 @@ export function SiteFooter() {
                   Open studio
                 </Link>
                 <Link
-                  href="/contact"
+                  href={siteConfig.chromeExtensionHref}
                   className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm font-medium text-slate-900"
                 >
-                  Contact
+                  Chrome extension
                 </Link>
               </div>
             </div>

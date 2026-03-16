@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Sourcewave",
+  "version": "0.1.0",
+  "description": "Capture the current page and open Sourcewave Studio with the URL prefilled.",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_title": "Sourcewave",
+    "default_popup": "popup.html"
+  }
+}

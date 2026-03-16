@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f0e8;
+  --background: #f7f2ea;
   --foreground: #112030;
-  --paper: rgba(255, 250, 243, 0.84);
-  --paper-strong: rgba(255, 250, 243, 0.94);
-  --line: rgba(17, 32, 48, 0.12);
+  --paper: rgba(255, 251, 245, 0.88);
+  --paper-strong: rgba(255, 251, 245, 0.96);
+  --line: rgba(17, 32, 48, 0.1);
   --accent: #ff7a30;
   --accent-deep: #d95d18;
   --teal: #176d69;
-  --muted: #61707f;
-  --shadow: 0 30px 80px rgba(24, 39, 58, 0.12);
+  --muted: #526473;
+  --shadow: 0 24px 70px rgba(24, 39, 58, 0.1);
 }
 
 @theme inline {
@@ -32,10 +32,11 @@ body {
   min-height: 100vh;
   color: var(--foreground);
   background:
-    radial-gradient(circle at top left, rgba(255, 122, 48, 0.22), transparent 34%),
-    radial-gradient(circle at bottom right, rgba(23, 109, 105, 0.24), transparent 38%),
-    linear-gradient(135deg, #f5ecdf 0%, #f7f3eb 50%, #dcebe7 100%);
+    radial-gradient(circle at top left, rgba(255, 122, 48, 0.2), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(23, 109, 105, 0.16), transparent 40%),
+    linear-gradient(135deg, #f6eee2 0%, #f8f4ec 52%, #e7f0ec 100%);
   font-family: var(--font-space-grotesk), sans-serif;
+  line-height: 1.5;
 }
 
 a {
@@ -50,14 +51,14 @@ a {
   background: var(--paper);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(18px);
 }
 
 .glass-card-strong {
   background: var(--paper-strong);
   border: 1px solid rgba(17, 32, 48, 0.12);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(20px);
 }
 
 .label-mono {
@@ -79,11 +80,11 @@ a {
   overflow: hidden;
   border: 1px solid rgba(17, 32, 48, 0.1);
   background:
-    radial-gradient(circle at top right, rgba(255, 122, 48, 0.1), transparent 32%),
-    radial-gradient(circle at bottom left, rgba(23, 109, 105, 0.1), transparent 34%),
-    linear-gradient(180deg, rgba(255, 250, 243, 0.92), rgba(255, 250, 243, 0.82));
+    radial-gradient(circle at top right, rgba(255, 122, 48, 0.09), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(23, 109, 105, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 251, 245, 0.94), rgba(255, 251, 245, 0.84));
   box-shadow: var(--shadow);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(18px);
 }
 
 .how-slide::after {

@@ -18,17 +18,17 @@ export interface UseCase {
 export const siteConfig = {
   name: "Sourcewave",
   legalName: "Sourcewave Labs",
-  tagline: "From source to speech, without the drift.",
-  secondaryTagline: "Grounded voice products for teams building with audio.",
+  tagline: "Turn any page into a grounded podcast briefing.",
+  secondaryTagline: "Website to podcast, with a reviewable workflow before audio render.",
   description:
-    "Sourcewave turns source material into polished voice products using Needle for retrieval, Featherless AI for scripts, and ElevenLabs for audio.",
+    "Sourcewave turns websites, docs, and product notes into grounded podcasts and voice briefings you can inspect before audio is rendered.",
   studioHref: "/studio",
+  chromeExtensionHref: "/chrome-extension",
+  extensionDownloadHref: "/downloads/sourcewave-chrome-extension.zip",
   formspreeAction: "https://formspree.io/f/xjgaewza",
   navItems: [
-    { href: "/", label: "Home" },
     { href: "/how-it-works", label: "How it works" },
-    { href: "/use-cases", label: "Use cases" },
-    { href: "/blog", label: "Blog" },
+    { href: "/chrome-extension", label: "Chrome extension" },
     { href: "/contact", label: "Contact" },
   ] satisfies NavItem[],
   footerGroups: [
@@ -36,6 +36,7 @@ export const siteConfig = {
       title: "Product",
       items: [
         { href: "/studio", label: "Studio" },
+        { href: "/chrome-extension", label: "Chrome extension" },
         { href: "/how-it-works", label: "How it works" },
         { href: "/use-cases", label: "Use cases" },
         { href: "/blog", label: "Blog" },
@@ -44,8 +45,8 @@ export const siteConfig = {
     {
       title: "Company",
       items: [
-        { href: "/careers", label: "Careers" },
         { href: "/contact", label: "Contact" },
+        { href: "/careers", label: "Careers" },
         { href: "/privacy-policy", label: "Privacy policy" },
         { href: "/terms-and-conditions", label: "Terms and conditions" },
       ] satisfies NavItem[],
@@ -53,88 +54,100 @@ export const siteConfig = {
   ],
 };
 
-export const homeStats = [
+export const homeWorkflow = [
   {
-    title: "Retrieval-first generation",
-    copy: "Needle pulls the evidence before any script is written.",
+    title: "Capture the page",
+    copy: "Paste a URL in the studio or send the current tab from the Chrome extension.",
   },
   {
-    title: "Two-pass script control",
-    copy: "Featherless drafts the conversation and rewrites it against the source.",
+    title: "Review the grounded answer",
+    copy: "Sourcewave retrieves context, writes the briefing, and shows evidence before audio becomes the trusted output.",
   },
   {
-    title: "Multi-voice audio output",
-    copy: "ElevenLabs renders final dialogue with live voice selection and previews.",
+    title: "Render and share audio",
+    copy: "Choose voices, export the finished file, and reuse the same flow for explainers, onboarding, or research briefs.",
   },
 ] satisfies SiteCard[];
 
 export const featureCards = [
   {
     title: "Website to podcast",
-    copy: "Paste a public URL and generate a grounded two-host episode with transcript and audio.",
+    copy: "Turn any public page into a two-host briefing with a transcript, summary, and downloadable audio.",
   },
   {
-    title: "Voice agent briefings",
-    copy: "Convert docs, product pages, and support material into short spoken briefs for agent teams.",
+    title: "Focused intent capture",
+    copy: "Guide broad sites with a specific question so the answer stays tighter and more relevant.",
   },
   {
-    title: "Audio explainers",
-    copy: "Turn launch pages, founder notes, and internal updates into clean audio assets without a recording session.",
+    title: "Grounded review surface",
+    copy: "Inspect direct answers, citations, transcript lines, and the source context before you trust the audio.",
   },
   {
-    title: "Voice previews",
-    copy: "Load ElevenLabs voices live, compare hosts, and hear preview clips before generation.",
-  },
-  {
-    title: "Grounded review",
-    copy: "Inspect source input, context preview, and final transcript before trusting the rendered audio.",
-  },
-  {
-    title: "Reusable workflows",
-    copy: "Use the same stack for podcasts, demos, onboarding clips, multilingual explainers, and agent prompts.",
+    title: "Chrome extension handoff",
+    copy: "Grab the page you are already reading and open Sourcewave with the URL prefilled and ready to generate.",
   },
 ] satisfies SiteCard[];
 
-export const elevenLabsCapabilities = [
+export const extensionBenefits = [
   {
-    title: "Multi-speaker dialogue",
-    copy: "Generate host A and host B audio in one flow instead of stitching clips by hand.",
+    title: "Stay in the tab you found",
+    copy: "Capture the current page without copying links around or reopening the workflow from scratch.",
   },
   {
-    title: "Voice library previews",
-    copy: "Browse account voices, sample previews, and choose a pair that matches the tone of the project.",
+    title: "Start with the right source",
+    copy: "The extension passes the exact page into Sourcewave Studio so the generation flow begins with the page you chose.",
   },
   {
-    title: "Brand voice assets",
-    copy: "Use the same voice stack for product explainers, narrated walkthroughs, outbound demos, and internal training.",
-  },
-  {
-    title: "Voice-agent content",
-    copy: "Prepare spoken handoffs, onboarding prompts, and persona-driven responses that start from real source material.",
+    title: "Keep the review step",
+    copy: "The extension speeds up capture, but the final answer, transcript, and audio still happen inside the same grounded studio workflow.",
   },
 ] satisfies SiteCard[];
+
+export const extensionInstallSteps = [
+  "Download the Sourcewave Chrome extension files.",
+  "Unzip the downloaded archive on your computer.",
+  "Open chrome://extensions in Chrome.",
+  "Turn on Developer mode in the top-right corner.",
+  "Click Load unpacked.",
+  "Select the unzipped Sourcewave extension folder.",
+  "Pin the extension from the Chrome toolbar.",
+  "Open any public site and click Create podcast.",
+] as const;
+
+export const extensionHowToSteps = [
+  "Open any public page you want to turn into a podcast or briefing.",
+  "Click the Sourcewave extension icon to confirm the current page.",
+  "Choose Create podcast to open Sourcewave Studio with the URL prefilled.",
+  "Add intent if needed, review the grounded output, then render audio.",
+] as const;
+
+export const extensionTrustNotes = [
+  "The extension reads only the active tab you choose when you open it.",
+  "No content scripts or background site crawling are required for the v1 flow.",
+  "Audio generation still happens on the Sourcewave site, not inside the browser extension.",
+] as const;
 
 export const exampleFlows = [
   {
-    title: "Founder site to podcast brief",
+    title: "Founder site to short audio briefing",
     source: "Portfolio or personal site",
-    output: "2-host episode + downloadable audio",
+    output: "Two-host briefing + downloadable audio",
     detail:
-      "Useful when a team wants a quick spoken summary of a founder, product, or consulting practice.",
+      "Useful when a founder, consultant, or operator wants a fast spoken summary from an existing page.",
   },
   {
     title: "Docs to onboarding audio",
     source: "Knowledge base or product docs",
-    output: "Short internal audio briefing",
+    output: "Short internal voice briefing",
     detail:
-      "Useful for onboarding, sales enablement, or support teams that need a faster way to absorb product context.",
+      "Useful for onboarding, support, and sales teams that need fast context from existing written material.",
   },
   {
-    title: "Voice-agent launch pack",
-    source: "Landing page + feature docs",
-    output: "Scripted demo, sample prompts, and brand-aligned voice output",
+    title: "Launch page to voice-ready explainer",
+    source: "Landing page + release notes",
+    output: "Narrated walkthrough and shareable audio",
     detail:
-      "Useful when shipping voice agents that need product-safe messaging and consistent spoken responses.",
+      "Useful when a team wants cleaner spoken output without recording a host from scratch.",
   },
 ];
 

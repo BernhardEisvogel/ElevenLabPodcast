@@ -21,7 +21,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         <div className="glass-card-strong flex items-center justify-between rounded-[1.8rem] px-4 py-3 sm:px-5">
           <SiteLogo />
 
@@ -42,12 +42,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href="/contact"
-              className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
-            >
-              Talk to us
-            </Link>
             <Link
               href={siteConfig.studioHref}
               className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-deep)]"
@@ -83,13 +77,6 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                href="/contact"
-                className="rounded-2xl border border-slate-900/10 bg-white/75 px-4 py-3 text-sm font-medium text-slate-900"
-                onClick={() => setIsOpen(false)}
-              >
-                Talk to us
-              </Link>
               <Link
                 href={siteConfig.studioHref}
                 className="rounded-2xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-white"

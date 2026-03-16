@@ -14,6 +14,7 @@ ELEVENLABS_API_KEY=
 ELEVENLABS_MODEL_ID=eleven_v3
 ELEVENLABS_VOICE_ID_HOST_A=
 ELEVENLABS_VOICE_ID_HOST_B=
+NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000
 ```
 
 What each one does:
@@ -23,6 +24,7 @@ What each one does:
 - `FEATHERLESS_MODEL`: optional model override for Featherless.
 - `ELEVENLABS_API_KEY`: lists voices, exposes previews, and renders the final dialogue audio.
 - `ELEVENLABS_VOICE_ID_HOST_A` and `ELEVENLABS_VOICE_ID_HOST_B`: optional defaults if you do not want to pick voices in the UI.
+- `NEXT_PUBLIC_SITE_URL`: the base URL the Chrome extension should open when it launches Sourcewave Studio.
 
 ## Contact flow
 
@@ -46,6 +48,7 @@ Open `http://localhost:3000`.
 - `/`: marketing landing page
 - `/studio`: live generator studio
 - `/how-it-works`: product workflow explanation
+- `/chrome-extension`: Chrome extension install and setup page
 - `/use-cases`: applied use cases
 - `/blog`: seeded blog index
 - `/contact`: Formspree-backed contact form
@@ -61,6 +64,22 @@ Open `http://localhost:3000`.
 - `lib/script.ts`: Featherless AI script generation
 - `lib/elevenlabs.ts`: voice listing and dialogue audio generation
 - `components/podcast-studio.tsx`: studio UI
+- `chrome-extension/`: MV3 Chrome extension source
+- `scripts/package-extension.mjs`: packages the Chrome extension download ZIP
+
+## Chrome extension
+
+The install page links to a generated archive at:
+
+```bash
+/downloads/sourcewave-chrome-extension.zip
+```
+
+The extension is packaged automatically before `dev` and `build`, and it opens:
+
+```bash
+${NEXT_PUBLIC_SITE_URL}/studio?source=<active-tab-url>&origin=extension
+```
 
 ## Testing
 

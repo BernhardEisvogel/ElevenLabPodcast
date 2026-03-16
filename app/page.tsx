@@ -1,35 +1,33 @@
 import Link from "next/link";
 
-import { getBlogPosts } from "@/lib/blog";
 import {
-  elevenLabsCapabilities,
   exampleFlows,
+  extensionBenefits,
   featureCards,
-  homeStats,
+  homeWorkflow,
   siteConfig,
   useCases,
 } from "@/lib/site";
 
 export default function Home() {
-  const featuredPosts = getBlogPosts().slice(0, 3);
-  const featuredUseCases = useCases.slice(0, 4);
+  const featuredUseCases = useCases.slice(0, 3);
 
   return (
-    <main className="px-4 pb-4 pt-6 sm:px-6 lg:px-10">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <section className="glass-card-strong wave-grid relative overflow-hidden rounded-[2.4rem] px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
-          <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(255,122,48,0.3),_transparent_68%)]" />
-          <div className="absolute bottom-[-40px] left-[-40px] h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(23,109,105,0.2),_transparent_72%)]" />
+    <main className="px-4 pb-8 pt-6 sm:px-6 lg:px-10">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:gap-8">
+        <section className="glass-card-strong relative overflow-hidden rounded-[2.6rem] px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+          <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(255,122,48,0.24),_transparent_68%)]" />
+          <div className="absolute bottom-[-70px] left-[-50px] h-80 w-80 rounded-full bg-[radial-gradient(circle,_rgba(23,109,105,0.18),_transparent_72%)]" />
 
           <div className="relative grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div className="max-w-3xl">
               <p className="label-mono text-[11px] text-[var(--muted)]">{siteConfig.name}</p>
-              <h1 className="mt-4 max-w-4xl text-4xl leading-none font-semibold tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-7xl">
+              <h1 className="mt-4 max-w-4xl text-4xl leading-none font-semibold tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
                 {siteConfig.tagline}
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
-                {siteConfig.description} Build podcasts, explainers, voice-agent content, and
-                internal briefings from source material your team can actually inspect.
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
+                {siteConfig.description} Start in the studio or launch the flow from the Chrome
+                extension when you find a page worth turning into audio.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -40,18 +38,18 @@ export default function Home() {
                   Open studio
                 </Link>
                 <Link
-                  href="/contact"
-                  className="rounded-full border border-slate-900/10 bg-white/80 px-5 py-3 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
+                  href={siteConfig.chromeExtensionHref}
+                  className="rounded-full border border-slate-900/10 bg-white/85 px-5 py-3 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
                 >
-                  Book a workflow review
+                  Chrome extension
                 </Link>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-2">
-                {["Needle retrieval", "Featherless scripting", "ElevenLabs audio"].map((item) => (
+                {["URL in, audio out", "Review before render", "Chrome capture flow"].map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-slate-900/10 bg-white/75 px-3 py-2 text-sm text-[var(--muted)]"
+                    className="rounded-full border border-slate-900/10 bg-white/80 px-3 py-2 text-sm text-slate-900"
                   >
                     {item}
                   </span>
@@ -61,26 +59,22 @@ export default function Home() {
 
             <div className="grid gap-4">
               <article className="rounded-[2rem] border border-slate-900/10 bg-slate-950 p-5 text-white shadow-[0_24px_70px_rgba(24,39,58,0.18)]">
-                <p className="label-mono text-[10px] text-white/50">Studio preview</p>
-                <div className="mt-4 grid gap-4 sm:grid-cols-[0.9fr_1.1fr]">
+                <p className="label-mono text-[10px] text-white/55">Studio flow</p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_1fr]">
                   <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                    <p className="text-sm text-white/65">Input</p>
-                    <p className="mt-2 text-sm leading-7 text-white">
-                      https://rahulai.com
+                    <p className="text-sm text-white/60">Current page</p>
+                    <p className="mt-2 text-sm leading-7 text-white">https://example.com/pricing</p>
+                    <p className="mt-4 text-sm leading-6 text-white/68">
+                      Extension captures the tab and opens Sourcewave Studio with the URL ready.
                     </p>
-                    <div className="mt-4 space-y-2">
-                      <div className="h-2 rounded-full bg-white/18" />
-                      <div className="h-2 w-5/6 rounded-full bg-white/12" />
-                      <div className="h-2 w-3/4 rounded-full bg-white/10" />
-                    </div>
                   </div>
                   <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                    <p className="text-sm text-white/65">Output</p>
+                    <p className="text-sm text-white/60">Generated output</p>
                     <p className="mt-2 text-sm leading-7 text-white">
-                      Grounded transcript, selected voices, final downloadable audio.
+                      Direct answer, transcript, citations, and final audio in one review flow.
                     </p>
                     <div className="mt-4 flex items-end gap-1">
-                      {[16, 28, 18, 34, 22, 30, 20, 38].map((height, index) => (
+                      {[18, 30, 22, 38, 24, 34, 20, 40].map((height, index) => (
                         <span
                           key={`${height}-${index}`}
                           className="how-wave-bar w-2 rounded-full bg-white/80"
@@ -93,13 +87,14 @@ export default function Home() {
               </article>
 
               <div className="grid gap-4 sm:grid-cols-3">
-                {homeStats.map((item) => (
+                {exampleFlows.map((item) => (
                   <article
                     key={item.title}
-                    className="rounded-[1.7rem] border border-slate-900/10 bg-white/78 p-4"
+                    className="rounded-[1.6rem] border border-slate-900/10 bg-white/82 p-4"
                   >
-                    <p className="text-sm font-semibold text-slate-950">{item.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.copy}</p>
+                    <p className="label-mono text-[10px] text-[var(--muted)]">{item.source}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{item.title}</p>
+                    <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.output}</p>
                   </article>
                 ))}
               </div>
@@ -107,143 +102,130 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {featureCards.map((item) => (
-            <article
-              key={item.title}
-              className="glass-card rounded-[1.8rem] p-5 transition hover:translate-y-[-2px]"
-            >
-              <p className="text-lg font-semibold tracking-[-0.03em] text-slate-950">{item.title}</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.copy}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-          <article className="how-slide rounded-[2rem] px-6 py-8 sm:px-8">
-            <p className="label-mono text-[11px] text-[var(--muted)]">What you can ship</p>
+        <section className="glass-card rounded-[2.2rem] px-6 py-8 sm:px-8">
+          <div className="max-w-3xl">
+            <p className="label-mono text-[11px] text-[var(--muted)]">From page to podcast</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-              More than a podcast generator.
+              A clearer workflow from source capture to final audio.
             </h2>
-            <div className="mt-6 space-y-3">
-              {elevenLabsCapabilities.map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-[1.5rem] border border-slate-900/10 bg-white/80 px-4 py-4"
-                >
-                  <p className="text-base font-semibold text-slate-950">{item.title}</p>
-                  <p className="mt-2 text-sm leading-7 text-[var(--muted)]">{item.copy}</p>
-                </article>
-              ))}
-            </div>
-          </article>
-
-          <article className="how-slide rounded-[2rem] px-6 py-8 sm:px-8">
-            <p className="label-mono text-[11px] text-[var(--muted)]">Example flows</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-              Real outputs for real teams.
-            </h2>
-            <div className="mt-6 space-y-4">
-              {exampleFlows.map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-[1.6rem] border border-slate-900/10 bg-white/82 p-5"
-                >
-                  <div className="flex flex-wrap gap-2 text-xs text-[var(--muted)]">
-                    <span className="rounded-full bg-slate-950 px-3 py-1 text-white">
-                      {item.source}
-                    </span>
-                    <span className="rounded-full border border-slate-900/10 px-3 py-1">
-                      {item.output}
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-950">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.detail}</p>
-                </article>
-              ))}
-            </div>
-          </article>
-        </section>
-
-        <section className="glass-card rounded-[2rem] px-6 py-8 sm:px-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl">
-              <p className="label-mono text-[11px] text-[var(--muted)]">Use cases</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-                Built for product teams, content teams, and voice-agent builders.
-              </h2>
-            </div>
-            <Link
-              href="/use-cases"
-              className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
-            >
-              See all use cases
-            </Link>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
+              The product is designed to make capture fast without removing the review step that
+              keeps audio grounded.
+            </p>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {featuredUseCases.map((item) => (
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            {homeWorkflow.map((item, index) => (
               <article
                 key={item.title}
-                className="rounded-[1.7rem] border border-slate-900/10 bg-white/82 p-5"
+                className="rounded-[1.8rem] border border-slate-900/10 bg-white/84 p-5"
               >
-                <p className="label-mono text-[10px] text-[var(--muted)]">{item.audience}</p>
-                <h3 className="mt-3 text-lg font-semibold text-slate-950">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.summary}</p>
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-900/10 bg-white text-sm font-semibold text-slate-950">
+                  {index + 1}
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-950">{item.title}</h3>
+                <p className="mt-3 max-w-sm text-sm leading-7 text-[var(--muted)]">{item.copy}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="glass-card rounded-[2rem] px-6 py-8 sm:px-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl">
-              <p className="label-mono text-[11px] text-[var(--muted)]">From the blog</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-                Practical writing on grounded audio and voice agents.
-              </h2>
+        <section className="grid gap-6 xl:grid-cols-[1.02fr_0.98fr]">
+          <article className="glass-card rounded-[2.2rem] px-6 py-8 sm:px-8">
+            <p className="label-mono text-[11px] text-[var(--muted)]">Core capabilities</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+              Built to stay readable while still showing the important parts.
+            </h2>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              {featureCards.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-[1.7rem] border border-slate-900/10 bg-white/82 p-5"
+                >
+                  <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.copy}</p>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className="glass-card rounded-[2.2rem] px-6 py-8 sm:px-8">
+            <p className="label-mono text-[11px] text-[var(--muted)]">Where teams use it</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+              Useful for product, content, and voice workflow teams.
+            </h2>
+            <div className="mt-7 space-y-4">
+              {featuredUseCases.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-[1.7rem] border border-slate-900/10 bg-white/82 p-5"
+                >
+                  <p className="label-mono text-[10px] text-[var(--muted)]">{item.audience}</p>
+                  <h3 className="mt-3 text-lg font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.summary}</p>
+                </article>
+              ))}
             </div>
             <Link
-              href="/blog"
-              className="rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
+              href="/use-cases"
+              className="mt-6 inline-flex rounded-full border border-slate-900/10 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
             >
-              Visit the blog
+              See more use cases
             </Link>
-          </div>
+          </article>
+        </section>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            {featuredPosts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="rounded-[1.8rem] border border-slate-900/10 bg-white/82 p-5 transition hover:translate-y-[-2px]"
-              >
-                <div className="flex flex-wrap gap-2 text-xs text-[var(--muted)]">
-                  <span className="rounded-full bg-[rgba(255,122,48,0.12)] px-3 py-1 text-slate-900">
-                    {post.category}
-                  </span>
-                  <span className="rounded-full border border-slate-900/10 px-3 py-1">
-                    {post.readingTime}
-                  </span>
-                </div>
-                <h3 className="mt-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
-                  {post.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{post.excerpt}</p>
-              </Link>
-            ))}
+        <section className="how-slide rounded-[2.2rem] px-6 py-8 sm:px-8">
+          <div className="grid gap-6 lg:grid-cols-[0.98fr_1.02fr] lg:items-center">
+            <div className="max-w-2xl">
+              <p className="label-mono text-[11px] text-[var(--muted)]">Chrome extension</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+                Capture the page you are reading and send it straight into the studio.
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[var(--muted)]">
+                The extension is intentionally lightweight. It grabs the active tab, opens
+                Sourcewave Studio with that URL prefilled, and keeps the full review flow on the
+                web app where the grounded answer and audio generation already live.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href={siteConfig.chromeExtensionHref}
+                  className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Install for Chrome
+                </Link>
+                <Link
+                  href={siteConfig.studioHref}
+                  className="rounded-full border border-slate-900/10 bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:border-[var(--accent)]"
+                >
+                  Open studio directly
+                </Link>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              {extensionBenefits.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-[1.7rem] border border-slate-900/10 bg-white/84 p-5"
+                >
+                  <h3 className="text-base font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.copy}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="how-slide how-slide-dark rounded-[2rem] px-6 py-8 text-center sm:px-8 lg:px-10 lg:py-12">
+        <section className="how-slide how-slide-dark rounded-[2.2rem] px-6 py-8 text-center sm:px-8 lg:px-10 lg:py-12">
           <div className="mx-auto max-w-3xl">
-            <p className="label-mono text-[11px] text-white/50">{siteConfig.name} studio</p>
+            <p className="label-mono text-[11px] text-white/50">{siteConfig.name} Studio</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
-              Ship grounded audio faster.
+              Review the answer. Then render the audio.
             </h2>
             <p className="mt-5 text-base leading-7 text-white/72 sm:text-lg">
-              Start with a URL, a topic, or a product brief. Review the retrieved context. Choose
-              voices. Export the final asset.
+              Whether you start in the studio or from the Chrome extension, the important step is
+              the same: inspect the grounded output before you publish the voice version.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -253,10 +235,10 @@ export default function Home() {
                 Open studio
               </Link>
               <Link
-                href="/contact"
+                href={siteConfig.chromeExtensionHref}
                 className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/35"
               >
-                Talk to Sourcewave
+                View extension setup
               </Link>
             </div>
           </div>

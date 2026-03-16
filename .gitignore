@@ -21,6 +21,7 @@
 
 # production
 /build
+/public/downloads/*.zip
 
 # misc
 .DS_Store
